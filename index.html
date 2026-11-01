@@ -449,11 +449,11 @@
         <div class="ios-card-title">경강선 성남역 판교행 시간표</div>
         <div class="ios-card">
             <div class="gg-input">
-                <p>성남역에서 판교행 경강선이 출발하는 시각(평일)을 붙여넣으면 코스 1과 최적 출발 안내가 계산돼요. <b>06:06</b>처럼 시:분 형태로 적으면 줄바꿈·쉼표·공백 어떤 구분이든 괜찮아요. 이 기기에만 저장돼요.</p>
+                <p>성남역 판교행 경강선(평일) 시간표예요. 기본값은 18:18까지 들어 있고, 바뀌면 새 시각을 붙여넣어 고칠 수 있어요. <b>06:06</b>처럼 시:분 형태로 적으면 줄바꿈·쉼표·공백 어떤 구분이든 괜찮아요. 이 기기에만 저장돼요.</p>
                 <textarea id="ggInput" placeholder="예) 06:06 06:22 06:38 ..."></textarea>
                 <div class="gg-actions">
                     <button class="btn-custom" onclick="saveGG()">저장하고 다시 계산</button>
-                    <button class="btn-custom" style="background:#f2f2f7;color:var(--text-sub);flex:0 0 auto;" onclick="clearGG()">비우기</button>
+                    <button class="btn-custom" style="background:#f2f2f7;color:var(--text-sub);flex:0 0 auto;" onclick="clearGG()">기본값</button>
                 </div>
                 <div class="gg-status" id="ggStatus"></div>
                 <div class="gg-status">시간표 확인: <a class="gg-link" href="https://pat.im/1747" target="_blank" rel="noopener">경강선 성남역 시간표</a></div>
@@ -492,7 +492,23 @@
 
     // 경강선 성남역 판교행 출발 시각 (평일). 비어 있으면 아래 입력칸에 붙여넣어 사용
     const GG_STORAGE_KEY = 'goWork.gyeonggangUp';
-    let gyeonggangUpTimetable = [];
+    // 기본값: 성남역 경강선 판교 방면 평일 시간표 (캡처 기준, 18:18까지 확인됨)
+    const GG_DEFAULT = [
+        "06:07","06:22","06:37","06:50",
+        "07:04","07:17","07:30","07:45","07:56",
+        "08:05","08:14","08:23","08:33","08:43","08:57",
+        "09:10","09:28","09:47",
+        "10:02","10:20","10:36","10:58",
+        "11:22","11:44",
+        "12:07","12:23","12:42",
+        "13:02","13:20","13:41",
+        "14:03","14:22","14:42",
+        "15:00","15:18","15:39","15:59",
+        "16:20","16:38","16:59",
+        "17:16","17:31","17:45",
+        "18:00","18:18"
+    ];
+    let gyeonggangUpTimetable = GG_DEFAULT.slice();
 
     // ===== 이동시간 설정 (분) =====
     const HOME_TO_STATION_MIN = 10;   // 집 → 동탄역
@@ -906,9 +922,9 @@
     }
 
     function clearGG() {
-        gyeonggangUpTimetable = [];
+        gyeonggangUpTimetable = GG_DEFAULT.slice();
         try { localStorage.removeItem(GG_STORAGE_KEY); } catch (e) {}
-        document.getElementById('ggInput').value = '';
+        document.getElementById('ggInput').value = gyeonggangUpTimetable.join(' ');
         updateGGStatus();
         refreshAll();
     }
